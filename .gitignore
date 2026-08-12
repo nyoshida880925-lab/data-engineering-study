@@ -1,0 +1,10 @@
+# Python virtual environment
+.venv/
+
+# Local environment variables
+docker/postgres/.env
+
+# Generated data
+data/processed/
+
+.env
