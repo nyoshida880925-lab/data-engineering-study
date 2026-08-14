@@ -1,3 +1,5 @@
+import boto3
+
 from config import PROJECT_ROOT, get_s3_settings
 from load.s3 import upload_file_to_s3
 
@@ -15,11 +17,13 @@ def main() -> None:
 
     print(f"{RAW_FILE}をS3へアップロードします。")
 
+    s3_client = boto3.client("s3", region_name=settings["AWS_REGION"])
+
     upload_file_to_s3(
         file_path=RAW_FILE,
         bucket=settings["S3_BUCKET"],
         key=S3_KEY,
-        region=settings["AWS_REGION"],
+        s3_client=s3_client,
     )
 
     print(

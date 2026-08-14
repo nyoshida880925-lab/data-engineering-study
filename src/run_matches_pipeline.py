@@ -1,3 +1,5 @@
+import boto3
+
 from config import (
     PROJECT_ROOT,
     get_s3_settings,
@@ -41,6 +43,7 @@ def main() -> None:
 
     bucket = settings["S3_BUCKET"]
     region = settings["AWS_REGION"]
+    s3_client = boto3.client("s3", region_name=region)
 
     print("=== Matches Pipeline Start ===")
 
@@ -52,7 +55,7 @@ def main() -> None:
         file_path=RAW_FILE,
         bucket=bucket,
         key=RAW_S3_KEY,
-        region=region,
+        s3_client=s3_client,
     )
 
     print(
@@ -95,7 +98,7 @@ def main() -> None:
         directory=PROCESSED_DIRECTORY,
         bucket=bucket,
         prefix=PROCESSED_S3_PREFIX,
-        region=region,
+        s3_client=s3_client,
     )
 
     print()

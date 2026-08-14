@@ -1,17 +1,15 @@
 from pathlib import Path
-
-import boto3
+from typing import Any
 
 def upload_file_to_s3(
         file_path: Path,
         bucket: str,
         key: str,
-        region: str,
+        s3_client: Any,
 ) -> None:
-    s3_client = boto3.client(
-        "s3",
-        region_name=region
-    )
+    if not file_path.is_file():
+        raise FileNotFoundError(f"{file_path}が見つかりません。")
+
     s3_client.upload_file(
         str(file_path),
         bucket,
@@ -22,16 +20,17 @@ def upload_directory_to_s3(
         directory: Path,
         bucket: str,
         prefix: str,
-        region: str,
+        s3_client: Any,
 ) -> None:
-    s3_client = boto3.client(
-        "s3",
-        region_name=region
-    )
+    if not directory.is_dir():
+        raise FileNotFoundError(f"{directory}が見つかりません。")
 
     files = list(
         directory.rglob("*.parquet")
     )
+
+    if not files:
+        raise ValueError(f"{directory}にParquetファイルが見つかりません。")
 
     print(f"{len(files)}個のParquetファイルをS3にアップロードします。")
 
