@@ -45,7 +45,11 @@ def save_as_deterministic_partitioned_parquet(
             / "matches.parquet"
         )
 
-        partition.to_parquet(
+        parquet_data = partition.drop(
+            columns=["season"]
+        )
+
+        parquet_data.to_parquet(
             file_path,
             index=False,
         )
