@@ -8,3 +8,7 @@ docker/postgres/.env
 data/processed/
 
 .env
+
+# Python cache
+src/load/__pycache__/*.pyc
+*.py[cod]
