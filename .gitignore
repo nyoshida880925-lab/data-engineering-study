@@ -10,5 +10,8 @@ data/processed/
 .env
 
 # Python cache
+src/__pycache__/*.pyc
+src/extract/__pycache__/*.pyc
+src/transform/__pycache__/*.pyc
 src/load/__pycache__/*.pyc
 *.py[cod]
