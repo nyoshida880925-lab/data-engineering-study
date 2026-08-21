@@ -15,3 +15,6 @@ src/extract/__pycache__/*.pyc
 src/transform/__pycache__/*.pyc
 src/load/__pycache__/*.pyc
 *.py[cod]
+
+# Airflow runtime files
+docker/airflow/logs/
