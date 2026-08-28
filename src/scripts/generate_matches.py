@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from config import PROJECT_ROOT
+from data_engineering_study.config import PROJECT_ROOT
 
 OUTPUT_PATH = (
     PROJECT_ROOT / "data" / "raw" / "matches_large.csv"

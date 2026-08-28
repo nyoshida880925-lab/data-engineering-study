@@ -1,7 +1,7 @@
-from config import PROJECT_ROOT
-from extract.matches import extract_matches
-from load.parquet import save_as_partitioned_parquet
-from transform.matches import transform_matches
+from data_engineering_study.config import PROJECT_ROOT
+from data_engineering_study.extract.matches import extract_matches
+from data_engineering_study.load.parquet import save_as_partitioned_parquet
+from data_engineering_study.transform.matches import transform_matches
 
 CSV_PATH = (
     PROJECT_ROOT / "data" / "raw" / "matches.csv"

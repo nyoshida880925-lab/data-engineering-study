@@ -1,6 +1,6 @@
 import boto3
 
-from config import get_s3_settings
+from data_engineering_study.config import get_s3_settings
 
 def main() -> None:
     settings = get_s3_settings()

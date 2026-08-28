@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.transform.matches import transform_matches
+from data_engineering_study.transform.matches import transform_matches
 
 def test_transform_matches_success():
     matches = pd.DataFrame(

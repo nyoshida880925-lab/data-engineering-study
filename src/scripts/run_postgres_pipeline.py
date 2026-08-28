@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from config import PROJECT_ROOT, get_postgres_settings
-from extract.matches import extract_matches
-from load.matches import load_matches
-from transform.matches import transform_matches
+from data_engineering_study.config import PROJECT_ROOT, get_postgres_settings
+from data_engineering_study.extract.matches import extract_matches
+from data_engineering_study.load.matches import load_matches
+from data_engineering_study.transform.matches import transform_matches
 
 CSV_PATH = (
     PROJECT_ROOT / "data" / "raw" / "matches.csv"

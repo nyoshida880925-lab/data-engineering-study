@@ -1,19 +1,19 @@
 import boto3
 
-from config import (
+from data_engineering_study.config import (
     PROJECT_ROOT,
     get_s3_settings,
 )
 
-from extract.matches import extract_matches
-from load.parquet import (
+from data_engineering_study.extract.matches import extract_matches
+from data_engineering_study.load.parquet import (
     save_as_deterministic_partitioned_parquet,
 )
-from load.s3 import (
+from data_engineering_study.load.s3 import (
     upload_directory_to_s3,
     upload_file_to_s3,
 )
-from transform.matches import transform_matches
+from data_engineering_study.transform.matches import transform_matches
 
 RAW_FILE = (
     PROJECT_ROOT

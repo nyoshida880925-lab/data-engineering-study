@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.load.parquet import save_as_partitioned_parquet
+from data_engineering_study.load.parquet import save_as_partitioned_parquet
 
 def test_save_as_partitioned_parquet(tmp_path):
     # テスト用のDataFrameを作成

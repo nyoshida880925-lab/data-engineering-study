@@ -1,7 +1,7 @@
 import boto3
 
-from config import PROJECT_ROOT, get_s3_settings
-from load.s3 import upload_file_to_s3
+from data_engineering_study.config import PROJECT_ROOT, get_s3_settings
+from data_engineering_study.load.s3 import upload_file_to_s3
 
 RAW_FILE = (
     PROJECT_ROOT
