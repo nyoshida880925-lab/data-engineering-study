@@ -258,4 +258,7 @@ READMEの主役は、
 どう実行する？
 ```
 
+## Documentation
 
+- [Architecture](docs/architecture.md)
+- [Learning Roadmap](docs/learning-roadmap.md)
