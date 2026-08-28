@@ -2,7 +2,7 @@ from time import perf_counter
 
 import pandas as pd
 
-from config import PROJECT_ROOT
+from data_engineering_study.config import PROJECT_ROOT
 
 CSV_PATH = (
     PROJECT_ROOT
