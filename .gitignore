@@ -7,13 +7,13 @@ docker/postgres/.env
 # Generated data
 data/processed/
 
+# Raw data
+data/raw/
+
 .env
 
 # Python cache
-src/__pycache__/*.pyc
-src/extract/__pycache__/*.pyc
-src/transform/__pycache__/*.pyc
-src/load/__pycache__/*.pyc
+__pycache__/
 *.py[cod]
 
 # Airflow runtime files

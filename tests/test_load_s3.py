@@ -1,7 +1,7 @@
 from unittest.mock import Mock, call
 import pytest
 
-from src.load.s3 import (
+from data_engineering_study.load.s3 import (
     upload_directory_to_s3,
     upload_file_to_s3,
 )
