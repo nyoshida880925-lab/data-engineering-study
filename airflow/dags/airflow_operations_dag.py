@@ -3,7 +3,7 @@ from datetime import timedelta
 import pendulum
 
 from airflow.sdk import dag, get_current_context, task
-from airflow.timetabels.interval import CronDataIntervalTimetable
+from airflow.timetables.interval import CronDataIntervalTimetable
 
 @dag(
     dag_id="airflow_operations_dag",
