@@ -608,6 +608,11 @@ flowchart TD
 - Sensor
 - XCom
 - Task Dependency
+- Airflow Schedule
+- Data Interval
+- Catchup
+- Retry / Failure Handling
+- Backfill
 
 ## Software Engineering
 
