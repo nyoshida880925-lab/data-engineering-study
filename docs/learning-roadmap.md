@@ -628,7 +628,6 @@ flowchart TD
 
 - Monitoring
 - Alerting
-- Backfill
 - Data Quality
 - Pipeline Parameterization
 - Production-oriented Airflow Architecture
