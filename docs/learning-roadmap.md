@@ -450,6 +450,92 @@ AthenaのQuery Execution IDはXComを利用して
 
 ---
 
+## Phase 17: Airflow Operations / Schedule / Retry / Failure Handling / Backfill
+
+### Topics
+- Schedule
+- Data Interval
+- Logical Date
+- Retry
+- Failure Handling
+- Backfill
+- XCom
+
+### Implementation
+
+手動で1回で動くDAGを定期実行を行えるようにしました。
+
+処理中に予期せぬ一時的な障害が発生した場合は、リトライを最大2回実施するようになっています。
+
+ただし、以下のバリデーションルールでエラーになった場合は、リトライ対象外としています。
+
+バリデーションルール
+- 対象とするデータ期間の開始日時が終了日時より未来日である場合エラー
+
+Airflow UIからの手動実行は引き続き行えますが、
+
+同じDAGを同時実行しないように制御しています。
+
+Backfillで過去に処理が完了しなかった分のDAGを実行出来る事を理解しました。
+
+Dry Run で実行するDAGを確認
+```
+docker compose exec airflow-scheduler \
+  airflow backfill create \
+  --dag-id airflow_operations_dag \
+  --from-date "2026-08-20T00:00:00+09:00" \
+  --to-date "2026-08-22T23:59:59+09:00" \
+  --reprocess-behavior none \
+  --dry-run
+```
+
+実行後の出力例
+Runs to be attempted:
++---------------------------+-----------------+------------------+
+| logical_date              | partition_key   | partition_date   |
++===========================+=================+==================+
+| 2026-08-19 17:00:00+00:00 |                 |                  |
++---------------------------+-----------------+------------------+
+| 2026-08-20 17:00:00+00:00 |                 |                  |
++---------------------------+-----------------+------------------+
+| 2026-08-21 17:00:00+00:00 |                 |                  |
++---------------------------+-----------------+------------------+
+
+確認出来たら実施に実行
+
+```
+docker compose exec airflow-scheduler \
+  airflow backfill create \
+  --dag-id airflow_operations_dag \
+  --from-date "2026-08-20T00:00:00+09:00" \
+  --to-date "2026-08-22T23:59:59+09:00" \
+  --reprocess-behavior none \
+  --max-active-runs 1
+```
+
+`max_active_runs=1` で同時に大量実行しないようにしています。
+
+```
+8/20
+ ↓
+完了
+ ↓
+8/21
+ ↓
+完了
+ ↓
+8/22
+```
+
+### Learned
+
+- DAGの定期実行
+- catchupにより過去のDAGが実行されないように制御
+- 一時的な障害に対応するリトライ処理を導入
+- 過去に失敗したDAGをBackfillで手動実行
+
+---
+
 # Current Learning Architecture
 
 Phase 1からPhase 16までで、
@@ -536,8 +622,6 @@ flowchart TD
 
 主な候補：
 
-- Airflow Schedule
-- Retry / Failure Handling
 - Monitoring
 - Alerting
 - Backfill
