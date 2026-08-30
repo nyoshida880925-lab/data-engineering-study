@@ -450,9 +450,99 @@ AthenaのQuery Execution IDはXComを利用して
 
 ---
 
+## Phase 17: Airflow Operations / Schedule / Retry / Failure Handling / Backfill
+
+### Topics
+- Schedule
+- Data Interval
+- Logical Date
+- Retry
+- Failure Handling
+- Backfill
+- XCom
+
+### Implementation
+
+手動で1回実行していたDAGを、定期実行できるようにしました。
+
+処理中に一時的な障害を想定し、処理失敗時には最大2回リトライするようになっています。
+
+ただし、以下のバリデーションルールでエラーになった場合は、リトライ対象外としています。
+
+バリデーションルール
+- 対象とするデータ期間の開始日時が、終了日時以降の場合はエラー
+
+Airflow UIからの手動実行は引き続き行えますが、
+
+同じDAGを同時実行しないように制御しています。
+
+Backfillを利用して、指定した過去期間のDAG Runを再処理できることを確認しました。
+
+Dry Run で実行するDAGを確認
+```
+docker compose exec airflow-scheduler \
+  airflow backfill create \
+  --dag-id airflow_operations_dag \
+  --from-date "2026-08-20T00:00:00+09:00" \
+  --to-date "2026-08-22T23:59:59+09:00" \
+  --reprocess-behavior none \
+  --dry-run
+```
+
+実行後の出力例
+```
+Runs to be attempted:
++---------------------------+-----------------+------------------+
+| logical_date              | partition_key   | partition_date   |
++===========================+=================+==================+
+| 2026-08-19 17:00:00+00:00 |                 |                  |
++---------------------------+-----------------+------------------+
+| 2026-08-20 17:00:00+00:00 |                 |                  |
++---------------------------+-----------------+------------------+
+| 2026-08-21 17:00:00+00:00 |                 |                  |
++---------------------------+-----------------+------------------+
+```
+
+確認出来たら実際に実行
+
+```
+docker compose exec airflow-scheduler \
+  airflow backfill create \
+  --dag-id airflow_operations_dag \
+  --from-date "2026-08-20T00:00:00+09:00" \
+  --to-date "2026-08-22T23:59:59+09:00" \
+  --reprocess-behavior none \
+  --max-active-runs 1
+```
+
+`max_active_runs=1` で同時に大量実行しないようにしています。
+
+```
+8/20
+ ↓
+完了
+ ↓
+8/21
+ ↓
+完了
+ ↓
+8/22
+```
+
+### Learned
+
+- DAGの定期実行
+- catchup=False により過去のスケジュール分が自動実行されないように制御
+- 一時的な障害に対応するリトライ処理を導入
+- 指定した過去期間をBackfillで手動実行
+- Data IntervalがDAG Runの処理対象期間を表すことを理解
+- Logical Dateと実際の実行日時が必ずしも一致しないことを理解
+
+---
+
 # Current Learning Architecture
 
-Phase 1からPhase 16までで、
+Phase 1からPhase 17までで、
 以下の技術を段階的につなげました。
 
 ```mermaid
@@ -518,6 +608,11 @@ flowchart TD
 - Sensor
 - XCom
 - Task Dependency
+- Airflow Schedule
+- Data Interval
+- Catchup
+- Retry / Failure Handling
+- Backfill
 
 ## Software Engineering
 
@@ -536,11 +631,8 @@ flowchart TD
 
 主な候補：
 
-- Airflow Schedule
-- Retry / Failure Handling
 - Monitoring
 - Alerting
-- Backfill
 - Data Quality
 - Pipeline Parameterization
 - Production-oriented Airflow Architecture
