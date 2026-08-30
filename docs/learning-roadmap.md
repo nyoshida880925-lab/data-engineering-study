@@ -463,7 +463,7 @@ AthenaのQuery Execution IDはXComを利用して
 
 ### Implementation
 
-手動で1回で動くDAGを定期実行を行えるようにしました。
+手動で1回実行していたDAGを、定期実行できるようにしました。
 
 処理中に予期せぬ一時的な障害が発生した場合は、リトライを最大2回実施するようになっています。
 
@@ -476,7 +476,7 @@ Airflow UIからの手動実行は引き続き行えますが、
 
 同じDAGを同時実行しないように制御しています。
 
-Backfillで過去に処理が完了しなかった分のDAGを実行出来る事を理解しました。
+Backfillを利用して、指定した過去期間のDAG Runを再処理できることを確認しました。
 
 Dry Run で実行するDAGを確認
 ```
@@ -503,7 +503,7 @@ Runs to be attempted:
 +---------------------------+-----------------+------------------+
 ```
 
-確認出来たら実施に実行
+確認出来たら実際に実行
 
 ```
 docker compose exec airflow-scheduler \
@@ -532,15 +532,17 @@ docker compose exec airflow-scheduler \
 ### Learned
 
 - DAGの定期実行
-- catchupにより過去のDAGが実行されないように制御
+- catchup=False により過去のスケジュール分が自動実行されないように制御
 - 一時的な障害に対応するリトライ処理を導入
-- 過去に失敗したDAGをBackfillで手動実行
+- 指定した過去期間をBackfillで手動実行
+- Data IntervalがDAG Runの処理対象期間を表すことを理解
+- Logical Dateと実際の実行日時が必ずしも一致しないことを理解
 
 ---
 
 # Current Learning Architecture
 
-Phase 1からPhase 16までで、
+Phase 1からPhase 17までで、
 以下の技術を段階的につなげました。
 
 ```mermaid
